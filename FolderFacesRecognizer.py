@@ -2,10 +2,9 @@ import FaceRecognitionUtilities
 import os
 from argparse import ArgumentParser
 
-
 if __name__ == '__main__':
-    os.chdir('./PEOPLES')
     parser = ArgumentParser()
+    parser.add_argument('-p', "--path", type=str, nargs=1, help='Path of the folder to analyse')
     parser.add_argument("-a", "--add", action='store_true',
                         help="Add Known Faces from the Knows Faces Folder")
 
@@ -16,17 +15,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    current_directory = os.getcwd()
+    if args.path is None:
+        current_directory = os.getcwd()
+    else:
+        current_directory = args.path
 
     face_recognizer = FaceRecognitionUtilities.FolderFacesRecognitionObject(current_directory)
 
-    if args.add:
-        face_recognizer.add_know_faces_from_folder()
+    if args.add and args.analyse:
+        print("One action at the time please")
+    else:
+        if args.add:
+            face_recognizer.add_know_faces_from_folder()
 
-    if args.analyse:
-        face_recognizer.parse_images()
+        if args.analyse:
+            face_recognizer.parse_images()
 
-    if args.show:
-        face_recognizer.show_folders_face_information()
+        if args.show:
+            face_recognizer.show_folders_face_information()
 
     face_recognizer.save()
